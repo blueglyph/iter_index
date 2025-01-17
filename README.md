@@ -1,4 +1,9 @@
-# `iter_index` crate
+[![crate](https://img.shields.io/crates/v/iter_index.svg)](https://crates.io/crates/iter-index)
+[![documentation](https://docs.rs/index-start/badge.svg)](https://docs.rs/iter-index)
+[![crate](https://img.shields.io/crates/l/iter_index.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-MIT)
+[![crate](https://img.shields.io/crates/l/iter_index.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-APACHE)
+
+# `iter-index` crate
 
 This is a simple extension trait that provides a more flexible alternative to the iterator's method `enumerate()`. It allows to:
  * use a custom type for the index with `index::<T>()`
