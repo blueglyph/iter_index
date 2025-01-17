@@ -9,8 +9,12 @@ fn tests() {
     let result = items.iter().index_start::<u8>(97).collect::<Vec<_>>();
     assert_eq!(result, vec![(97_u8, &"a"), (98_u8, &"b"), (99_u8, &"c")]);
 
-    let result = items.into_iter().index_step::<i16>(100, 10).collect::<Vec<_>>();
-    assert_eq!(result, vec![(100_i16, "a"), (110_i16, "b"), (120_i16, "c")]);
+    let result = items.iter().index_step::<i16>(100, 10).collect::<Vec<_>>();
+    assert_eq!(result, vec![(100_i16, &"a"), (110_i16, &"b"), (120_i16, &"c")]);
+
+    // i32 if no type is specified
+    let result = items.into_iter().index_start(97).collect::<Vec<_>>();
+    assert_eq!(result, vec![(97, "a"), (98, "b"), (99, "c")]);
 
     let items = 'a'..='z';
     let mut result = items.index_step(100, 10);

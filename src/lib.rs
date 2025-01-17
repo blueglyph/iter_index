@@ -1,3 +1,32 @@
+// Copyright 2025 Redglyph
+//
+
+//! This crate provides a simple extension trait that provides a more flexible alternative to the iterator's method `enumerate()`.
+//!
+//! It allows to:
+//!  * use a custom type for the index with `index::<T>()`
+//!  * define a custom start value with `index_start::<T>(start: T)`
+//!  * define a custom step value with `index_step::<T>(start: T, step: T)`.
+//!
+//! ```rust
+//! use iter_index::IndexerIterator;
+//!
+//! let items = vec!["a", "b", "c"];
+//! let result = items.iter().index::<i32>().collect::<Vec<_>>();
+//! assert_eq!(result, vec![(0_i32, &"a"), (1_i32, &"b"), (2_i32, &"c")]);
+//!
+//! let result = items.iter().index_start::<u8>(97).collect::<Vec<_>>();
+//! assert_eq!(result, vec![(97_u8, &"a"), (98_u8, &"b"), (99_u8, &"c")]);
+//!
+//! let result = items.into_iter().index_step::<i16>(100, 10).collect::<Vec<_>>();
+//! assert_eq!(result, vec![(100_i16, "a"), (110_i16, "b"), (120_i16, "c")]);
+//!
+//! let items = 'a'..='z';
+//! let mut result = items.index_step(100, 10);
+//! assert_eq!(result.next(), Some((100, 'a')));
+//! assert_eq!(result.nth(5), Some((160, 'g')));
+//! ```
+
 use std::fmt::Debug;
 use std::ops::{Add, AddAssign, Mul};
 
@@ -65,7 +94,7 @@ pub trait IndexerIterator {
     ///
     /// `index::<T>()` starts counting at 0 and increments by 1. If you need another start value, use
     /// `index_start::<T>(start: T)` instead. If you need different steps than 1, use
-    /// `index_step::<T>(start: T, step: T)´.
+    /// `index_step::<T>(start: T, step: T)`.
     ///
     /// # Overflow Behavior
     ///
@@ -95,7 +124,7 @@ pub trait IndexerIterator {
     /// index of iteration, and `val` is the value returned by the source iterator.
     ///
     /// `index_start::<T>(start: T)` starts counting at `start` and increments by 1. If you need different
-    /// steps than 1, use `index_step::<T>(start: T, step: T)´.
+    /// steps than 1, use `index_step::<T>(start: T, step: T)`.
     ///
     /// # Overflow Behavior
     ///
