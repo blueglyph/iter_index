@@ -32,6 +32,8 @@ use std::ops::{Add, AddAssign, Mul};
 
 mod tests;
 
+//------------------------------------------------------------------------------
+
 /// An iterator that yields the current count, with the generic type, and the iteration item.
 #[derive(Clone, Debug)]
 #[must_use = "iterators are lazy and do nothing unless consumed"]
@@ -44,58 +46,6 @@ pub struct Indexer<I, T> {
 impl<I, T> Indexer<I, T> {
     pub fn new(iter: I, start: T, step: T) -> Indexer<I, T> {
         Indexer { iter, counter: start, step  }
-    }
-}
-
-impl<I, T> Iterator for Indexer<I, T>
-where
-    I: Iterator,
-    T: Clone + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
-    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
-    <T as TryFrom<usize>>::Error: Debug,
-{
-    type Item = (T, I::Item);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        match self.iter.next() {
-            Some(v) => {
-                let result = Some((self.counter.clone(), v));
-                self.counter += &self.step;
-                result
-            }
-            None => None
-        }
-    }
-
-    #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.iter.size_hint()
-    }
-
-    #[inline]
-    fn count(self) -> usize {
-        self.iter.count()
-    }
-
-    #[inline]
-    fn nth(&mut self, n: usize) -> Option<Self::Item> {
-        let a = self.iter.nth(n)?;
-        let nn: T = n.try_into().expect(&format!("Cannot convert n into {}", std::any::type_name::<T>()));
-        let i = &self.counter + &(&nn * &self.step);
-        self.counter = &i + &self.step;
-        Some((i.clone(), a))
-    }
-}
-
-impl<I, T> ExactSizeIterator for Indexer<I, T>
-where
-    I: ExactSizeIterator,
-    T: Clone + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
-    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
-    <T as TryFrom<usize>>::Error: Debug,
-{
-    fn len(&self) -> usize {
-        self.iter.len()
     }
 }
 
@@ -190,6 +140,66 @@ pub trait IndexerIterator {
         Indexer::new(self, start, step)
     }
 }
+
+//------------------------------------------------------------------------------
+// Iterator methods
+
+impl<I, T> Iterator for Indexer<I, T>
+where
+    I: Iterator,
+    T: Clone + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
+    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
+    <T as TryFrom<usize>>::Error: Debug,
+{
+    type Item = (T, I::Item);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.iter.next() {
+            Some(v) => {
+                let result = Some((self.counter.clone(), v));
+                self.counter += &self.step;
+                result
+            }
+            None => None
+        }
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.iter.size_hint()
+    }
+
+    #[inline]
+    fn count(self) -> usize {
+        self.iter.count()
+    }
+
+    #[inline]
+    fn nth(&mut self, n: usize) -> Option<Self::Item> {
+        let a = self.iter.nth(n)?;
+        let nn: T = n.try_into().expect(&format!("Cannot convert n into {}", std::any::type_name::<T>()));
+        let i = &self.counter + &(&nn * &self.step);
+        self.counter = &i + &self.step;
+        Some((i.clone(), a))
+    }
+}
+
+//------------------------------------------------------------------------------
+
+impl<I, T> ExactSizeIterator for Indexer<I, T>
+where
+    I: ExactSizeIterator,
+    T: Clone + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
+    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
+    <T as TryFrom<usize>>::Error: Debug,
+{
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+//------------------------------------------------------------------------------
+// Blanket implementation
 
 impl<I: Iterator> IndexerIterator for I {}
 
