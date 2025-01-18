@@ -48,10 +48,11 @@ impl<I, T> Indexer<I, T> {
 }
 
 impl<I, T> Iterator for Indexer<I, T>
-    where I: Iterator,
-          T: Clone + for<'a> AddAssign<&'a T>  + From<u8> + TryFrom<usize>,
-          for<'a> &'a T: Add<Output = T> + Mul<Output = T>,
-          <T as TryFrom<usize>>::Error: Debug
+where
+    I: Iterator,
+    T: Clone + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
+    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
+    <T as TryFrom<usize>>::Error: Debug,
 {
     type Item = (T, I::Item);
 
@@ -83,6 +84,18 @@ impl<I, T> Iterator for Indexer<I, T>
         let i = &self.counter + &(&nn * &self.step);
         self.counter = &i + &self.step;
         Some((i.clone(), a))
+    }
+}
+
+impl<I, T> ExactSizeIterator for Indexer<I, T>
+where
+    I: ExactSizeIterator,
+    T: Clone + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
+    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
+    <T as TryFrom<usize>>::Error: Debug,
+{
+    fn len(&self) -> usize {
+        self.iter.len()
     }
 }
 

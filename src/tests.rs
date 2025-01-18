@@ -38,3 +38,9 @@ fn index_nth_error() {
     let mut result = items.index_step::<u8>(10, 2);
     assert_eq!(result.nth(500), Some(((1010 & 255) as u8, 501_u32)));
 }
+
+#[test]
+fn index_len() {
+    let items = vec!["a", "b", "c"];
+    assert_eq!(items.into_iter().index::<u8>().len(), 3);
+}
