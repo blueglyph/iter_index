@@ -44,3 +44,22 @@ fn index_len() {
     let items = vec!["a", "b", "c"];
     assert_eq!(items.into_iter().index::<u8>().len(), 3);
 }
+
+#[test]
+fn index_double_ended_iterator() {
+    let items = vec!["a", "b", "c"];
+    let result = items.into_iter().index::<i32>().rev().collect::<Vec<_>>();
+    assert_eq!(result, vec![(2_i32, "c"), (1_i32, "b"), (0_i32, "a")]);
+
+    let items = vec!["a", "b", "c"];
+    let result = items.into_iter().index_start::<u8>(97).rev().collect::<Vec<_>>();
+    assert_eq!(result, vec![(99_u8, "c"), (98_u8, "b"), (97_u8, "a")]);
+
+    let items = vec!["a", "b", "c"];
+    let result = items.into_iter().index_step::<i16>(100, 10).rev().collect::<Vec<_>>();
+    assert_eq!(result, vec![(120_i16, "c"), (110_i16, "b"), (100_i16, "a")]);
+
+    let items = vec!["a", "b", "c", "d"];
+    let mut result = items.into_iter().index_step::<i16>(100, 10);
+    assert_eq!(result.nth_back(2), Some((110, "b")));
+}

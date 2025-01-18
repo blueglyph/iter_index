@@ -185,6 +185,35 @@ where
 }
 
 //------------------------------------------------------------------------------
+// DoubleEndedIterator methods
+
+impl<I, T> DoubleEndedIterator for Indexer<I, T>
+where
+    I: ExactSizeIterator + DoubleEndedIterator,
+    T: Clone + Add<Output = T> + for<'a> AddAssign<&'a T> + From<u8> + TryFrom<usize>,
+    for<'a> &'a T: Add<Output=T> + Mul<Output=T>,
+    <T as TryFrom<usize>>::Error: Debug,
+{
+    #[inline]
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let item = self.iter.next_back()?;
+        let len = self.iter.len();
+        let len: T = len.try_into().expect(&format!("Cannot convert len = {len} into {}", std::any::type_name::<T>()));
+        // counter + len * step must not overflow for T
+        Some((self.counter.clone() + &len * &self.step, item))
+    }
+
+    #[inline]
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        let a = self.iter.nth_back(n)?;
+        let len = self.iter.len();
+        let len: T = len.try_into().expect(&format!("Cannot convert len = {len} into {}", std::any::type_name::<T>()));
+        // counter + len * step must not overflow for T
+        Some((self.counter.clone() + &len * &self.step, a))
+    }
+}
+
+//------------------------------------------------------------------------------
 
 impl<I, T> ExactSizeIterator for Indexer<I, T>
 where
