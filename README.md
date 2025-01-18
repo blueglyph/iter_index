@@ -1,7 +1,7 @@
 [![crate](https://img.shields.io/crates/v/iter_index.svg)](https://crates.io/crates/iter-index)
 [![documentation](https://docs.rs/iter-index/badge.svg)](https://docs.rs/iter-index)
-[![crate](https://img.shields.io/crates/l/iter_index.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-MIT)
-[![crate](https://img.shields.io/crates/l/iter_index.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-APACHE)
+[![license](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-MIT)
+[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-APACHE)
 
 # `iter-index` crate
 
