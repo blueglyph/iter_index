@@ -1,5 +1,6 @@
 #![cfg(test)]
 
+use std::collections::HashMap;
 use crate::IndexerIterator;
 
 #[test]
@@ -7,6 +8,15 @@ fn index() {
     let items = vec!["a", "b", "c"];
     let result = items.into_iter().index::<i32>().collect::<Vec<_>>();
     assert_eq!(result, vec![(0_i32, "a"), (1_i32, "b"), (2_i32, "c")]);
+}
+
+#[test]
+fn index_type_induced() {
+    let mut map = HashMap::<u8, &str>::new();
+    for (k, v) in vec!["a", "b", "c"].into_iter().index() {
+        map.insert(k, v);
+    }
+    assert_eq!(map, HashMap::from([(0_u8, "a"), (1_u8, "b"), (2_u8, "c")]));
 }
 
 #[test]

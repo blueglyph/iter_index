@@ -15,13 +15,11 @@ This is a simple extension trait that provides a more flexible alternative to th
 ```rust
 use iter_index::IndexerIterator;
 
-let items = vec!["a", "b", "c"];
-let mut result = items.into_iter().index::<i32>();
-
-assert_eq!(result.next(), Some((0_i32, "a")));
-assert_eq!(result.next(), Some((1_i32, "b")));
-assert_eq!(result.next(), Some((2_i32, "c")));
-assert_eq!(result.next(), None);
+let mut map = HashMap::<u8, &str>::new();
+for (k, v) in vec!["a", "b", "c"].into_iter().index() {
+    map.insert(k, v);
+}
+assert_eq!(map, HashMap::from([(0_u8, "a"), (1_u8, "b"), (2_u8, "c")]));
 ```
 
 ```rust
