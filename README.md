@@ -1,3 +1,7 @@
+**IMPORTANT**: This repository has been rehosted elsewhere. Check on crates.io (link below) to see where the latest code is hosted.
+
+---
+
 [![crate](https://img.shields.io/crates/v/iter_index.svg)](https://crates.io/crates/iter-index)
 [![documentation](https://docs.rs/iter-index/badge.svg)](https://docs.rs/iter-index)
 [![license](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://github.com/blueglyph/iter_index/blob/master/LICENSE-MIT)
